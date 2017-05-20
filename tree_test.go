@@ -146,6 +146,7 @@ func TestUnmatched(t *testing.T) {
 		pathCLean  bool
 	}{
 		{"/topic/:id:int", "/topic/aaa", nil, false},
+		{"/abc/?:id:int", "/abc/zzz", nil, false},
 	}
 	for _, r := range unrouters {
 		tr := NewTrie(Options{PathClean: r.pathCLean, CaseSensitive: true})
@@ -155,7 +156,7 @@ func TestUnmatched(t *testing.T) {
 			t.Fatalf("rule:%s URL:%s err:%s", r.url, r.requesturl, err)
 		}
 		if m.Node != nil {
-			t.Fatalf("rule:%s URL:%s matched:%s", r.url, r.requesturl, m.Node)
+			t.Fatalf("rule:%s URL:%s matched: %s", r.url, r.requesturl, m.Node)
 		}
 	}
 }

@@ -463,6 +463,9 @@ func matchNode(parent *Node, segment, path string) (child *Node) {
 			len(child.varyChildren) == 0 && len(child.segChildren) == 0 && len(child.optionChildren) == 0 {
 			continue
 		}
+		if child.regex != nil && !child.regex.MatchString(segment) {
+			continue
+		}
 		return child
 	}
 	for _, child = range parent.varyChildren {
@@ -552,7 +555,7 @@ func regexpSegment(seg string) (params []string, r *regexp.Regexp, optional bool
 					if seg[i+1:i+4] == "int" {
 						intRule := "([0-9]+)"
 						if optional {
-							intRule = "([0-9]*)"
+							intRule = "([0-9]+)"
 						}
 						expr = append(expr, []rune(intRule)...)
 						params = append(params, ":"+string(param))
