@@ -46,6 +46,7 @@ var routers = []struct {
 	{"/customer/login", "/customer/login.json", map[string]string{":ext": "json"}, false, true},
 	{"/topic/?:auth:int", "/topic/123", map[string]string{":auth": "123"}, false, false},
 	{"/topic/?:auth:int", "/topic", nil, false, false},
+	{"/abc/xyz/?:id", "/abc/xyz", nil, false, false},
 	{"/topic/:id/?:auth", "/topic/1", map[string]string{":id": "1"}, false, false},
 	{"/topic/:id/?:auth", "/topic/1/2", map[string]string{":id": "1", ":auth": "2"}, false, false},
 	{"/topic/:id/?:auth:int", "/topic/1", map[string]string{":id": "1"}, false, false},
@@ -133,6 +134,28 @@ func TestBuildURL(t *testing.T) {
 			if u.String() != r.requesturl {
 				t.Fatalf("rule:%s; expect:%v; Get :%#v", r.url, r.requesturl, u.String())
 			}
+		}
+	}
+}
+
+func TestUnmatched(t *testing.T) {
+	var unrouters = []struct {
+		url        string
+		requesturl string
+		params     map[string]string
+		pathCLean  bool
+	}{
+		{"/topic/:id:int", "/topic/aaa", nil, false},
+	}
+	for _, r := range unrouters {
+		tr := NewTrie(Options{PathClean: r.pathCLean, CaseSensitive: true})
+		tr.Parse(r.url).Handle("GET", "astaxie")
+		m, err := tr.Match(r.requesturl)
+		if err != nil {
+			t.Fatalf("rule:%s URL:%s err:%s", r.url, r.requesturl, err)
+		}
+		if m.Node != nil {
+			t.Fatalf("rule:%s URL:%s matched:%s", r.url, r.requesturl, m.Node)
 		}
 	}
 }
