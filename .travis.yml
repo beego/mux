@@ -13,6 +13,8 @@ install:
   - go get -u github.com/mdempsky/unconvert
   - go get github.com/mattn/goveralls
   - go get github.com/modocache/gover
+  - go get github.com/dimfeld/httptreemux
+  - go get github.com/julienschmidt/httprouter
 script:
   - go vet  $(go list ./... | grep -v /vendor/)
   - structcheck  $(go list ./... | grep -v /vendor/)
