@@ -10,7 +10,7 @@ This router supports fixed and regex rules in routing pattern, and matches reque
 
 ## Usage
 
-This is a simple example for `mux`. Read [godoc](#) to get full api documentation.
+This is a simple example for `mux`. Read [godoc](https://godoc.org/github.com/beego/mux) to get full api documentation.
 
 There is a basic example:
 
