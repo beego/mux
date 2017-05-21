@@ -343,7 +343,6 @@ func init() {
 }
 
 func benchRoutes(b *testing.B, router http.Handler, routes []route) {
-	b.N = 20000
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -366,7 +365,6 @@ func benchRequests(b *testing.B, router http.Handler, routes []route) {
 	ts := httptest.NewServer(router)
 	defer ts.Close()
 
-	b.N = 1000
 	b.ReportAllocs()
 	b.ResetTimer()
 
