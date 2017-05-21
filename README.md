@@ -1,5 +1,7 @@
 # mux
 
+[![Build Status](https://travis-ci.org/beego/mux.svg?branch=master)](https://travis-ci.org/beego/mux)
+
 A high performance and powerful trie based url path router for Go.
 
 This router supports fixed and regex rules in routing pattern, and matches request method. It's optimized by trie structure for faster matching and large scale rules.
