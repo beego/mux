@@ -112,13 +112,11 @@ Or read all parameters by `mux.Params`.
 
 ```go
 // r is *http.Request
-fmt.Println(mux.Params())
+fmt.Println(mux.Params(r))
 // e.g. map[:id:1 :name:beego]
 ```
 
-#### match scope
-
-A named parameter only can match in single segment of path with extension.
+A named parameter only can match single segment of path with extension.
 
 ```
 Pattern: /abc/:id
