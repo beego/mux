@@ -7,13 +7,6 @@ import (
 	"strings"
 )
 
-type key int
-
-const (
-	// RouteParamsID represent the key to store matched route params
-	RouteParamsID key = iota
-)
-
 // Mux is a tire base HTTP request router which can be used to
 // dispatch requests to different handler functions.
 type Mux struct {

@@ -31,8 +31,7 @@ func main() {
 		w.Write([]byte("hello, beego mux"))
 	})
 	mx.Get("/abc/:id", func(w http.ResponseWriter, r *http.Request) {
-		params := r.Context().Value(mux.RouteParamsID).(map[string]string)
-		fmt.Fprintf(w, "hello, abc page %s", params[":id"])
+		fmt.Fprintf(w, "hello, abc page %s", mux.Param(r,":id"))
 	})
 
 	log.Fatal(http.ListenAndServe("127.0.0.1:9999", mx))
@@ -95,8 +94,7 @@ As you see, `:id` is a **named parameter**. The matched parameters are stored in
 
 ```go
 // r is *http.Request
-params := r.Context().Value(mux.RouteParamsID).(map[string]string)
-fmt.Println(params[":id"])
+fmt.Println(mux.Param(r,":id"))
 ```
 
 #### match scope

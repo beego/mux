@@ -173,7 +173,7 @@ func TestMux(t *testing.T) {
 
 		mux := New()
 		mux.Get("/api/:type/:ID", func(w http.ResponseWriter, r *http.Request) {
-			params := r.Context().Value(RouteParamsID).(map[string]string)
+			params := Params(r)
 			w.WriteHeader(200)
 			w.Write([]byte(params[":type"] + params[":ID"]))
 		})
@@ -194,7 +194,7 @@ func TestMux(t *testing.T) {
 
 		mux := New()
 		mux.Get("/api/::/:ID", func(w http.ResponseWriter, r *http.Request) {
-			params := r.Context().Value(RouteParamsID).(map[string]string)
+			params := Params(r)
 			w.WriteHeader(200)
 			w.Write([]byte(params[":ID"]))
 		})
@@ -215,7 +215,7 @@ func TestMux(t *testing.T) {
 
 		mux := New()
 		mux.Get("/api/*", func(w http.ResponseWriter, r *http.Request) {
-			params := r.Context().Value(RouteParamsID).(map[string]string)
+			params := Params(r)
 			w.WriteHeader(200)
 			w.Write([]byte(params[":splat"]))
 		})
@@ -236,7 +236,7 @@ func TestMux(t *testing.T) {
 
 		mux := New()
 		mux.Get(`/api/:type/:ID(^\d+$)`, func(w http.ResponseWriter, r *http.Request) {
-			params := r.Context().Value(RouteParamsID).(map[string]string)
+			params := Params(r)
 			w.WriteHeader(200)
 			w.Write([]byte(params[":type"] + params[":ID"]))
 		})
