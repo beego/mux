@@ -8,12 +8,12 @@ type key int
 
 const (
 	// RouteParamsID represent the key to store matched route params
-	RouteParamsID key = iota
+	routeParamsID key = iota
 )
 
 // Params return the router params
 func Params(r *http.Request) map[string]string {
-	v := r.Context().Value(RouteParamsID)
+	v := r.Context().Value(routeParamsID)
 	if v == nil {
 		return map[string]string{}
 	}

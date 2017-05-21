@@ -125,7 +125,7 @@ func (m *Mux) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	if match.Params != nil {
-		ctx := context.WithValue(req.Context(), RouteParamsID, match.Params)
+		ctx := context.WithValue(req.Context(), routeParamsID, match.Params)
 		req = req.WithContext(ctx)
 	}
 	handler(w, req)
