@@ -23,14 +23,7 @@ var (
 	paramRegexp = regexp.MustCompile(`^:\w+$`)
 	// optional param
 	optionalParamRegexp = regexp.MustCompile(`^\?:\w+$`)
-	// https://tools.ietf.org/html/rfc3986#section-3.3
-	// the valid characters for the path segment:
-	//   pchar       = unreserved / pct-encoded / sub-delims / ":" / "@"
-	//   pct-encoded = "%" HEXDIG HEXDIG
-	//   unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	//   sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
-	//               / "*" / "+" / "," / ";" / "="
-	segmentRegexp  = regexp.MustCompile(`\+[A-Za-z0-9!$%&'*+,-.:;=@_~]*$`)
+
 	defaultOptions = Options{
 		CaseSensitive:  true,
 		PathClean:      true,
@@ -325,9 +318,9 @@ func (n *Node) BuildURL(pairs ...string) (*url.URL, error) {
 	var key string
 	for k, v := range pairs {
 		if k%2 == 0 {
-			key = fmt.Sprint(v)
+			key = v
 		} else {
-			params[key] = fmt.Sprint(v)
+			params[key] = v
 		}
 	}
 	path, err := buildPath(strings.Split(n.pattern, "/"), params)

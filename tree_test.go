@@ -156,7 +156,7 @@ func TestUnmatched(t *testing.T) {
 			t.Fatalf("rule:%s URL:%s err:%s", r.url, r.requesturl, err)
 		}
 		if m.Node != nil {
-			t.Fatalf("rule:%s URL:%s matched: %s", r.url, r.requesturl, m.Node)
+			t.Fatalf("rule:%s URL:%s matched: %v", r.url, r.requesturl, m.Node)
 		}
 	}
 }

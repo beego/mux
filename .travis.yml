@@ -5,17 +5,21 @@ go:
   - 1.8.1
 install:
   - export PATH=$PATH:$HOME/gopath/bin
+  - go get -u github.com/stretchr/testify/assert
   - go get -u github.com/opennota/check/cmd/structcheck
   - go get -u honnef.co/go/tools/cmd/gosimple
   - go get -u honnef.co/go/tools/cmd/staticcheck
   - go get -u honnef.co/go/tools/cmd/unused
   - go get -u github.com/mdempsky/unconvert
   - go get github.com/mattn/goveralls
+  - go get github.com/modocache/gover
 script:
   - go vet  $(go list ./... | grep -v /vendor/)
   - structcheck  $(go list ./... | grep -v /vendor/)
-  - gosimple -ignore "$(cat gosimple.ignore)" $(go list ./... | grep -v /vendor/)
+  - gosimple $(go list ./... | grep -v /vendor/)
   - staticcheck $(go list ./... | grep -v /vendor/)
   - unused $(go list ./... | grep -v /vendor/)
   - unconvert $(go list ./... | grep -v /vendor/)
+  - go test ./...
+  - gover
   - goveralls -coverprofile=gover.coverprofile -service=travis-ci
