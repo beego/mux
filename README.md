@@ -82,7 +82,9 @@ The routing pattern can set as fixed pattern as most simple way.
 Pattern: /abc/xyz
 
 /abc/xyz        matched
-/abc/xyz.html   no matched 
+/abc/xyz.html   matched 
+/abc/xyz.json   matched 
+/abc/xyz.xml    matched 
 /abc/xzz        no matched
 ```
 
