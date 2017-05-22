@@ -12,7 +12,6 @@ install:
   - go get -u honnef.co/go/tools/cmd/unused
   - go get -u github.com/mdempsky/unconvert
   - go get github.com/mattn/goveralls
-  - go get github.com/modocache/gover
   - go get github.com/dimfeld/httptreemux
   - go get github.com/julienschmidt/httprouter
 script:
@@ -23,5 +22,4 @@ script:
   - unused $(go list ./... | grep -v /vendor/)
   - unconvert $(go list ./... | grep -v /vendor/)
   - go test ./...
-  - gover
-  - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken=$COVERALLS_TOKEN
+  - goveralls -service=travis-ci
