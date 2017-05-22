@@ -194,9 +194,8 @@ func TestMux(t *testing.T) {
 
 		mux := New()
 		mux.Get("/api/::/:ID", func(w http.ResponseWriter, r *http.Request) {
-			params := Params(r)
 			w.WriteHeader(200)
-			w.Write([]byte(params[":ID"]))
+			w.Write([]byte(Param(r, ":ID")))
 		})
 
 		ts := httptest.NewServer(mux)
@@ -262,6 +261,7 @@ func TestMux(t *testing.T) {
 
 		mux := New()
 		mux.Get("/api", func(w http.ResponseWriter, r *http.Request) {
+			Params(r)
 			w.WriteHeader(200)
 			w.Write([]byte("OK"))
 		})
