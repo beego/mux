@@ -24,4 +24,4 @@ script:
   - unconvert $(go list ./... | grep -v /vendor/)
   - go test ./...
   - gover
-  - goveralls -coverprofile=gover.coverprofile -service=travis-ci
+  - goveralls -coverprofile=gover.coverprofile -service=travis-ci -repotoken=$COVERALLS_TOKEN
