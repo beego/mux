@@ -19,6 +19,15 @@ func Request(method, url string, body io.Reader) (*http.Response, error) {
 }
 
 func TestMux(t *testing.T) {
+	t.Run("Mux.Empty method", func(t *testing.T) {
+		defer func() {
+			if err := recover(); err == nil {
+				t.Fatal("Should be panic")
+			}
+		}()
+		mux := New()
+		mux.Handler("", "/:type", http.NotFoundHandler())
+	})
 	t.Run("Mux.Handler", func(t *testing.T) {
 		assert := assert.New(t)
 
