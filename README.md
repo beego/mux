@@ -24,7 +24,7 @@ There is a basic example:
 package main
 
 import (
-    "fmt"
+    	"fmt"
 	"log"
 	"net/http"
 
@@ -266,7 +266,7 @@ mx.Get("/xyz/?:id:int", func(w http.ResponseWriter, r *http.Request) {
 When using this `mx` to match urls, it shows result:
 
 ```
-URL					Pattern
+URL				Pattern
 /abc		->		/abc/?:id:int			(first one)
 /abc/123	->		/abc/?:id:int
 /abc/zzz	->		/abc/?:name:string
