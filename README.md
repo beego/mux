@@ -1,10 +1,14 @@
-# mux
+# mux   
 
 [![Build Status](https://travis-ci.org/beego/mux.svg?branch=master)](https://travis-ci.org/beego/mux)
+[![Coverage Status](https://coveralls.io/repos/github/beego/mux/badge.svg?branch=master)](https://coveralls.io/github/beego/mux?branch=master)
+[![GoDoc](https://godoc.org/github.com/beego/mux?status.svg)](http://godoc.org/github.com/beego/mux)
 
 A high performance and powerful trie based url path router for Go.
 
 This router supports fixed and regex rules in routing pattern, and matches request method. It's optimized by trie structure for faster matching and large scale rules.
+
+requirement: **Go 1.7+**
 
 ## Feature
 
@@ -20,7 +24,7 @@ There is a basic example:
 package main
 
 import (
-	"fmt"
+    	"fmt"
 	"log"
 	"net/http"
 
@@ -68,17 +72,20 @@ mx.Handler("GET","/abc", mx2) // /abc/ttt -> getHandleFunc
 
 #### default handler
 
-Register default handle to resolve missing matches. If no matched pattern is found, `mux` runs default handler if set.
+Register default handle to resolve missing matches. If can not find matched pattern, `mux` runs default handler if set.
 
 ```go
+mx.Get("/abc",abcHandleFunc)
 mx.DefaultHandler(defaultHandleFunc)
+// abc -> abcHandleFunc
+// ^abc -> defaultHandleFunc
 ```
 
 -----
 
 ## Routing
 
-The routing pattern can set as fixed pattern as most simple way.
+The routing pattern can set as fixed pattern as most simple way. When using fixed pattern, it supports to parse `json`, `xml` and `html` extension to match pattern.
 
 ```
 Pattern: /abc/xyz
@@ -94,16 +101,22 @@ But in common cases, you need parameters to match differenct segments in path.
 
 ### Named parameters
 
-As you see, `:id` is a **named parameter**. The matched parameters are stored in `*http.Request.Context()` as type `map[string]string` with special key `mux.RouteParamsID`. You can access via code :
+As you see, `:id` is a **named parameter**. The matched parameters can read one via `mux.Param` method from `*http.Request` by parameter's name.
 
 ```go
 // r is *http.Request
 fmt.Println(mux.Param(r,":id"))
 ```
 
-#### match scope
+Or read all parameters by `mux.Params`.
 
-A named parameter only can match in single segment of path with extension.
+```go
+// r is *http.Request
+fmt.Println(mux.Params(r))
+// e.g. map[:id:1 :name:beego]
+```
+
+A named parameter only can match single segment of path with extension.
 
 ```
 Pattern: /abc/:id
@@ -177,7 +190,9 @@ Pattern: /abc/xyz/?:id
 
 /abc/xyz/               matched     (:id is empty)
 /abc/xyz/123            matched     (:id is 123)
+```
 
+```
 Pattern: /abc/xyz/?:id:int
 
 /abc/xyz/               matched     (:id is empty)
@@ -187,7 +202,7 @@ Pattern: /abc/xyz/?:id:int
 
 #### Complex patterns
 
-The parameters in pattern can be united to use.
+The fixed segements, named parameters and regexp patterns can be used in one rule together.
 
 ```
 Pattern: /article/:id/comment_:page:int
@@ -195,21 +210,24 @@ Pattern: /article/:id/comment_:page:int
 /article/12/comment_2       matched     (:id is 12, :page is 2)
 /article/abc/comment_3      matched     (:id is abc, :page is 3)
 /article/abc/comment_xyz    no match
+```
 
+```
 Pattern: /data/:year/*/list
 
 /data/2012/11/12/list       matched     (:year is 2012, :splat is 11/12)
 /data/2014/12/list          matched     (:year is 2014, :splat is 12)
+```
 
+```
 Pattern: /pic/:width:int/:height:int/*.*
 
 /pic/20/20/aaaaaa.jpg      matched     (:width is 20, :height is 20, :path is aaaaaa, :ext is jpg)
 ```
 
-#### priority
+#### pattern matching order
 
-When url can match routing pattern with fixed segment and with named parameters. Fix segmented pattern is prior.
-
+Static pattern > parameters' pattern > regexp pattern.
 
 ```
 URL : /abc/99
@@ -223,4 +241,37 @@ URL : /abc/123
 pattern: /abc/99            no match
 pattern: /abc/:id           matched    (:id is 123)
 pattern: /abc/:id:int       no match
+```
+
+If register confusing patterns, it matches first one in adding order. For example, in regexp patterns:
+
+```go
+mx := mux.New()
+
+mx.Get("/abc/?:id:int", func(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "abc, int params %v", mux.Params(r))
+})
+mx.Get("/abc/?:name:string", func(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "abc, string params %v", mux.Params(r))
+})
+
+mx.Get("/xyz/?:name:string", func(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "xyz, string params %v", mux.Params(r))
+})
+mx.Get("/xyz/?:id:int", func(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "xyz, int params %v", mux.Params(r))
+})
+```
+
+When using this `mx` to match urls, it shows result:
+
+```
+URL				Pattern
+/abc		->		/abc/?:id:int			(first one)
+/abc/123	->		/abc/?:id:int
+/abc/zzz	->		/abc/?:name:string
+
+/xyz		->		/xyz/?:name:string		(first one)
+/xyz/123	->		/xyz/?:name:string		(123 is treated as string "123")
+/xyz/zzz	->		/xyz/?:name:string
 ```
