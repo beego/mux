@@ -262,6 +262,7 @@ func TestMux(t *testing.T) {
 		mux := New()
 		mux.Get("/api", func(w http.ResponseWriter, r *http.Request) {
 			Params(r)
+			Param(r, ":id")
 			w.WriteHeader(200)
 			w.Write([]byte("OK"))
 		})
