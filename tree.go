@@ -637,3 +637,20 @@ func pathClean(path string) string {
 	}
 	return strings.Replace(path, `//`, "/", -1)
 }
+
+func AddSuffixExt(extString string) {
+	allowSuffixExt = append(allowSuffixExt, extString)
+}
+
+func RemoveSuffixExt(extString string) {
+	for k, v := range allowSuffixExt {
+		if extString == v {
+			allowSuffixExt = append(allowSuffixExt[:k], allowSuffixExt[k+1:]...)
+			break
+		}
+	}
+}
+
+func GetSuffixExts() []string {
+	return allowSuffixExt
+}
