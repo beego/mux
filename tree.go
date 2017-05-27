@@ -277,7 +277,15 @@ func (n *Node) getSegments() string {
 
 // getChild return the static key
 func (n *Node) getChild(key string) *Node {
-	return n.children[key]
+	if v, ok := n.children[key]; ok {
+		return v
+	}
+	for _, c := range n.segChildren {
+		if c.segment == key {
+			return c
+		}
+	}
+	return nil
 }
 
 // Name sets the name for the route, used to build URLs.
