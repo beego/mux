@@ -12,19 +12,16 @@ func TestMain(t *testing.T) {
 	mx.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello, beego mux"))
 	})
-	mx.Get("/abc/:id", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "hello, abc page %s", Param(r, ":id"))
-	})
 
 	mx.Get("/hello", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "hello")
 	})
 
-	AddSuffixExt(".hahahahah")
+	AddSuffixExt(".foo")
 	fmt.Println(GetSuffixExts())
-	AddSuffixExt(".xixixixixi")
+	AddSuffixExt(".foo2")
 	fmt.Println(GetSuffixExts())
-	RemoveSuffixExt(".hahahahah")
+	RemoveSuffixExt(".foo")
 	fmt.Println(GetSuffixExts())
 
 	log.Fatal(http.ListenAndServe("127.0.0.1:9999", mx))
