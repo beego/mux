@@ -638,10 +638,13 @@ func pathClean(path string) string {
 	return strings.Replace(path, `//`, "/", -1)
 }
 
+// AddSuffixExt add new suffix ext
+// 	mux.AddSuffixExt(".foo") will match /any/path.foo
 func AddSuffixExt(extString string) {
 	allowSuffixExt = append(allowSuffixExt, extString)
 }
 
+// RemoveSuffixExt remove exist suffix ext
 func RemoveSuffixExt(extString string) {
 	for k, v := range allowSuffixExt {
 		if extString == v {
@@ -651,6 +654,7 @@ func RemoveSuffixExt(extString string) {
 	}
 }
 
+// GetSuffixExts get all exist suffix exts slice
 func GetSuffixExts() []string {
 	return allowSuffixExt
 }
