@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/beego/mux"
+	"github.com/ZetaChow/mux"
 	"github.com/dimfeld/httptreemux"
 	"github.com/julienschmidt/httprouter"
 )
