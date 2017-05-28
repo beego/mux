@@ -277,10 +277,23 @@ func (n *Node) getSegments() string {
 
 // getChild return the static key
 func (n *Node) getChild(key string) *Node {
+	if strings.Contains(key, "::") {
+		key = strings.Replace(key, "::", ":", -1)
+	}
 	if v, ok := n.children[key]; ok {
 		return v
 	}
 	for _, c := range n.segChildren {
+		if c.segment == key {
+			return c
+		}
+	}
+	for _, c := range n.optionChildren {
+		if c.segment == key {
+			return c
+		}
+	}
+	for _, c := range n.varyChildren {
 		if c.segment == key {
 			return c
 		}

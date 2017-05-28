@@ -97,11 +97,18 @@ func TestRouters(t *testing.T) {
 	for _, r := range routers {
 		tr := NewTrie(Options{PathClean: r.pathCLean, CaseSensitive: true})
 		tr.Parse(r.url).Handle("GET", "astaxie")
+		tr.Parse(r.url).Handle("POST", "asta")
 		m, err := tr.Match(r.requesturl)
 		if err != nil {
 			t.Fatalf("rule:%s URL:%s err:%s", r.url, r.requesturl, err)
 		}
-		if m == nil || m.Node == nil || m.Node.GetHandler("GET").(string) != "astaxie" {
+		if m == nil || m.Node == nil {
+			t.Fatalf("rule:%s; URL:%s; expect:%v; Get:%#v", r.url, r.requesturl, r.params, m)
+		}
+		if m.Node.GetHandler("GET") == nil || m.Node.GetHandler("GET").(string) != "astaxie" {
+			t.Fatalf("rule:%s; URL:%s; expect:%v; Get:%#v", r.url, r.requesturl, r.params, m)
+		}
+		if m.Node.GetHandler("POST") == nil || m.Node.GetHandler("POST").(string) != "asta" {
 			t.Fatalf("rule:%s; URL:%s; expect:%v; Get:%#v", r.url, r.requesturl, r.params, m)
 		}
 		if r.params != nil {
