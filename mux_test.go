@@ -198,6 +198,40 @@ func TestMux(t *testing.T) {
 		res.Body.Close()
 	})
 
+	t.Run("router with multiple named pattern", func(t *testing.T) {
+		assert := assert.New(t)
+
+		mux := New()
+		mux.Get("/api/:type/:ID", func(w http.ResponseWriter, r *http.Request) {
+			params := Params(r)
+			w.WriteHeader(200)
+			w.Write([]byte(params[":type"] + params[":ID"]))
+		})
+
+		mux.Get("/api/:ID", func(w http.ResponseWriter, r *http.Request) {
+			params := Params(r)
+			w.WriteHeader(200)
+			w.Write([]byte(params[":ID"]))
+		})
+
+		ts := httptest.NewServer(mux)
+		defer ts.Close()
+
+		res, err := Request("GET", ts.URL+"/api/user/123", nil)
+		assert.Nil(err)
+		assert.Equal(200, res.StatusCode)
+		body, _ := ioutil.ReadAll(res.Body)
+		assert.Equal("user123", string(body))
+		res.Body.Close()
+
+		res, err = Request("GET", ts.URL+"/api/user/123", nil)
+		assert.Nil(err)
+		assert.Equal(200, res.StatusCode)
+		body, _ = ioutil.ReadAll(res.Body)
+		assert.Equal("user123", string(body))
+		res.Body.Close()
+	})
+
 	t.Run("router with double colon pattern", func(t *testing.T) {
 		assert := assert.New(t)
 

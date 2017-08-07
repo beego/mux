@@ -480,6 +480,9 @@ func matchNode(parent *Node, segment, path string) (child *Node) {
 		if child.regex != nil && !child.regex.MatchString(segment) {
 			continue
 		}
+		if len(path) == 0 && len(child.optionChildren) == 0 && len(child.handlers) == 0 {
+			continue
+		}
 		return child
 	}
 	for _, child = range parent.varyChildren {
